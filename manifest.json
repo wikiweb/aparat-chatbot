@@ -1,0 +1,33 @@
+{
+  "manifest_version": 2,
+  "name": "Aparat ChatBot",
+  "version": "0.1",
+  "author": "Farzad Seid Arabi - @wikiweb_ir",
+  "description": "Contact Mail: Farzad.Seid.Arabi@gmail.com",
+  "content_scripts": [
+    {
+      "matches": [
+        "*://www.aparat.com/*/live"
+      ],
+      "js": ["jquery.min.js","content.js"]
+    }
+  ],
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
+  },
+  "permissions": [
+    "storage",
+    "tabs"
+  ],
+  "browser_action": { 
+    "default_icon": "icon128.png",
+    "default_popup": "popup.html"
+  },   
+  "icons": { 
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "96": "icon96.png",
+    "128": "icon128.png" 
+  }
+}

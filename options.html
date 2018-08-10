@@ -1,0 +1,108 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:og="https://ogp.me/ns#">
+
+<head>
+    <link type="text/css" rel="stylesheet" href="bootstrap/bootstrap.min.css" />
+    <title>Aparat ChatBot Options</title>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                    <br/><br/>
+                <div class="alert alert-warning" role="alert">
+                    Issue Report From <a href="https://t.me/wikiweb_ir" target="_blank">@Wikiweb_ir</a>
+                </div>
+
+                <div class="card" >
+                    <div class="card-body">
+                        Default Commands: <br/><b>uptime</b> For use that you should be install 
+                        <a href="https://chrome.google.com/webstore/detail/allow-control-allow-origi/nlfbmbojpeacfghkpbjhddihlkkiljbi?hl=en" target="_blank">This</a> Extension and Enable cross-origin resource sharing .
+                    </div>
+                </div><br/>
+                <form action="#">
+
+                    <div class="form-group">
+                        <label for="streamerName">Do you want to active ?? </label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="enableCheckBox">
+                            <label class="form-check-label" for="enableCheckBox">
+                                <b>Enable CHATBOT</b>
+                            </label>
+                        </div>
+                    </div>
+
+                        
+                    <div class="form-group">
+                        <label for="streamerName">Your Name</label>
+                        <input type="text" class="form-control" id="streamerName" placeholder="Jimmy">
+                    </div>
+            
+                    <div class="form-group">
+                        <label for="streamerAccount">Your Aparat Channel Name</label>
+                        <input type="text" class="form-control" id="streamerAccount" placeholder="wikiweb_ir">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="startSign">Command Start With</label>
+                        <input type="text" class="form-control" id="startSign" value="!">
+                    </div>
+                    
+
+                    <div class="form-group">
+                        <label for="botName">Bot Name</label>
+                        <input type="text" class="form-control" id="botName" value="">
+                    </div>
+
+                    <br/><br/>
+                    <h4>Commands:</h4>
+
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Command (no sign)</th>
+                                <th scope="col">Message</th>
+                                <th scope="col">-</th>
+                            </tr>
+                        </thead>
+                        <tbody id="commandsList">
+                                                     
+                        </tbody>
+                        
+                    </table>
+                    <div><a class="btn btn-primary text-white" id="addCommandEl">+Add Command</a></div>
+
+
+                    <br/><br/>
+                    <h4>Timer Messages:</h4>
+
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Second</th>
+                                <th scope="col">Message</th>
+                                <th scope="col">-</th>
+                            </tr>
+                        </thead>
+                        <tbody id="timersList">
+                                                  
+                        </tbody>
+                    </table>
+                    <div><a class="btn btn-primary text-white" id="addTimerEl">+Add Timer</a></div>
+                
+
+                    <hr/>
+                    <div class="form-group row">
+                        <div class="col-sm-10">
+                            <a id="saveForm" class="btn btn-success">Save</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+          </div>
+    </div>
+
+    <script src="bootstrap/jquery.min.js"></script>
+    <script src="options.js"></script>
+    <script src="bootstrap/bootstrap.min.js"></script>
+</body>
+</html>
