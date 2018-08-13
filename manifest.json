@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Aparat ChatBot",
-  "version": "0.1",
+  "version": "1.2",
   "author": "Farzad Seid Arabi - @wikiweb_ir",
   "description": "Contact Mail: Farzad.Seid.Arabi@gmail.com",
   "content_scripts": [
