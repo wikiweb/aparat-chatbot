@@ -4,25 +4,22 @@ var startSign = '!';
 var streamerUsername = '';
 var botName = '';
 var enableFlag = false;
-
-            
-
+var aparatUserName = '';
 
 chrome.storage.local.get(['db'], function(result) {
     if(result['db']){
         var db = JSON.parse(result.db);
         startSign = db.startSign;
-        streamerUsername = db.streamerAccount;
+        streamerUsername = db.streamerAccount.toLowerCase();
         botName = db.botName;
         enableFlag = db.enable;
 
         var tablink = window.location.href;
         var urlUserName = tablink.split('/');
         
-        console.log(urlUserName[3]);
-        if(db.streamerAccount != urlUserName[3]){
+        if(db.streamerAccount != aparatUserName){
             enableFlag= false;
-        }    
+        }
         
         if(enableFlag){
             
@@ -69,7 +66,8 @@ function deviceReady(){
                         if(chat == startSign+'uptime'){
                             
                             // document.getElementById('chat_input').value = ;
-                            callAjax('https://api.aparat.com/fa/v2/live/live/get_stream/username/'+streamerUsername+'/deviceType/web',function(responseText){
+                            window.callAjax('https://api.aparat.com/fa/v2/live/live/get_stream/username/'+streamerUsername+'/deviceType/web',function(responseText){
+                                console.log('ajax success');
                                 var streamData = JSON.parse(responseText);
                                 var streamStartDate = streamData['data']['attributes']['stat']['start_date'];
                                 var startStreamDate = new Date(streamStartDate);
@@ -95,7 +93,7 @@ function deviceReady(){
 }
 
 
-function callAjax(url, callback){
+window.callAjax = function(url, callback){
     var xmlhttp;
     // compatible with IE7+, Firefox, Chrome, Opera, Safari
     xmlhttp = new XMLHttpRequest();
@@ -108,3 +106,13 @@ function callAjax(url, callback){
     xmlhttp.send();
 }
 
+if(window.localStorage['persistentStore']){
+   try{
+       var aparatData = JSON.parse(window.localStorage.persistentStore);
+       if(aparatData['userStore']){
+           aparatUserName = aparatData.userStore.username;
+       }
+   } catch(e){
+       console.log(e);
+   }
+}

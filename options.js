@@ -3,7 +3,6 @@ var db = {
 	'streamerName': 'Farzad',
 	'streamerAccount': 'wikiweb_ir',
 	'startSign': '!',
-	'version': '1.0',
 	'botName': '🤖✅',
 	'enable': false,
 	'commands': [
@@ -14,6 +13,7 @@ var db = {
 	]
 };
 
+var version = "V1.2";
 var commandListCnt = 0;
 var timerListCnt = 0;
 var lastDb = '';
@@ -25,10 +25,17 @@ chrome.storage.local.get(['db'], function(result) {
 		db = JSON.parse(result.db);
 		lastDb = db;
 
-		$('#streamerName').val(db.streamerName);
-		$('#streamerAccount').val(db.streamerAccount);
+		pageSetupHandler(db);
+
+
+	}
+});
+
+function pageSetupHandler(db){
+	$('#streamerName').val(db.streamerName);
+		$('#streamerAccount').val(db.streamerAccount.toLowerCase());
 		$('#startSign').val(db.startSign);
-		$('#botName').val(db.botName);
+		$('#botName').val(db.botName);		
 		
 		var elmEnable = document.getElementById('enableCheckBox');
 		if(db.enable){
@@ -74,10 +81,7 @@ chrome.storage.local.get(['db'], function(result) {
 				document.getElementById('tmrListItemDelete_'+timerListCnt).addEventListener('click',deleteTimer);
 			});
 		}
-
-
-	}
-});
+}
 
 // Command Form Generator
 document.getElementById('addCommandEl').addEventListener('click',addCommand);
@@ -123,9 +127,65 @@ function deleteTimer(){
 	}
 }
 
+document.getElementById('exportForm').addEventListener("click",function(){
+	var c = confirm('You Should save Form Before export');
+	if(c){
+		var txt = JSON.stringify(db);
+		download('export.txt',txt);		
+	}
+});
 
 
+document.getElementById('importForm').addEventListener("click",function(){
+	var pom = document.createElement('input');
+	pom.type='file';
+	pom.id="importFile";
+	pom.click();
+	pom.addEventListener('change',function(evt){
+		evt.stopPropagation();
+		evt.preventDefault();
+		
+		var reader = new FileReader();
+		if (pom.files.length) {
+			var textFile = pom.files[0];
+			reader.readAsText(textFile);
+			$(reader).on('load', processFile);
+		} else {
+			alert('Please upload a file before continuing')
+		} 
 
+	});
+
+});
+
+function processFile(e){
+	var file = e.target.result,
+        results;
+    if (file && file.length) {        
+		var newDb = JSON.parse(file);
+		if(newDb['streamerAccount']){
+			chrome.storage.local.set({'db': file}, function() {
+				alert('Success');
+				pageSetupHandler(newDb);
+			});
+		}
+    }
+}
+
+function download(filename, text) {
+    var pom = document.createElement('a');
+    pom.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+    pom.setAttribute('download', filename);
+
+    if (document.createEvent) {
+        var event = document.createEvent('MouseEvents');
+        event.initEvent('click', true, true);
+        pom.dispatchEvent(event);
+    }
+    else {
+        pom.click();
+    }
+}
 
 document.getElementById("saveForm").addEventListener("click",saveForm);
 function saveForm(){
@@ -161,7 +221,7 @@ function saveForm(){
 	db.enable = (elmEnable.checked)? true:false;
 
 	db.streamerName = $('#streamerName').val();
-	db.streamerAccount = $('#streamerAccount').val();
+	db.streamerAccount = $('#streamerAccount').val().toLowerCase();
 	db.startSign = $('#startSign').val();
 	db.botName = $('#botName').val();
 
@@ -186,3 +246,30 @@ window.addEventListener("beforeunload", function (e) {
 	(e || window.event).returnValue = confirmationMessage; //Gecko + IE
 	return confirmationMessage; //Gecko + Webkit, Safari, Chrome etc.
 });
+
+window.callAjax = function(url, callback){
+    var xmlhttp;
+    // compatible with IE7+, Firefox, Chrome, Opera, Safari
+    xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function(){
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200){
+            callback(xmlhttp.responseText);
+        }
+    }
+    xmlhttp.open("GET", url, true);
+    xmlhttp.send();
+}
+
+
+callAjax('https://api.github.com/repos/wikiweb/aparat-chatbot/releases/latest',function(result){
+	try{
+		var result = JSON.parse(result);
+		console.log(result['name'],version);
+		if(result['name'] != version){
+			$('#updateBox').show();
+		}
+	}catch(e){
+		console.log(e);
+	}
+	
+})

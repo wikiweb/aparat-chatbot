@@ -18,7 +18,12 @@
   },
   "permissions": [
     "storage",
-    "tabs"
+    "tabs",
+    "https://api.aparat.com",
+    "http://api.aparat.com",
+    "*://*.aparat.com/*",
+    "*://*.github.com/*",
+    "*"
   ],
   "browser_action": { 
     "default_icon": "icon128.png",
