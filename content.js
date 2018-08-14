@@ -17,7 +17,8 @@ chrome.storage.local.get(['db'], function(result) {
         var tablink = window.location.href;
         var urlUserName = tablink.split('/');
         
-        if(db.streamerAccount != aparatUserName){
+        console.log(urlUserName[3]);
+        if(urlUserName[3] != aparatUserName){
             enableFlag= false;
         }
         
