@@ -5,6 +5,18 @@ var streamerUsername = '';
 var botName = '';
 var enableFlag = false;
 var aparatUserName = '';
+var isLogin=true;
+var timerCommands=[];
+
+chrome.storage.local.get(['isLogin'], function(result) {
+    var tablink = window.location.href;
+    var urlUserName = tablink.split('/');
+    
+    console.log('chatBot',urlUserName[3],result['isLogin']);
+    if(urlUserName[3] != result['isLogin']){
+        isLogin= false;
+    }
+});
 
 chrome.storage.local.get(['db'], function(result) {
     if(result['db']){
@@ -13,28 +25,11 @@ chrome.storage.local.get(['db'], function(result) {
         streamerUsername = db.streamerAccount.toLowerCase();
         botName = db.botName;
         enableFlag = db.enable;
-
-        var tablink = window.location.href;
-        var urlUserName = tablink.split('/');
-        
-        console.log(urlUserName[3]);
-        if(urlUserName[3] != aparatUserName){
-            enableFlag= false;
-        }
-        
+        timerCommands = db.timers;
         if(enableFlag){
             
             db.commands.forEach(items => {
                 commandsStructure[db.startSign + items.command.toLowerCase()] = items.msg;
-            });
-
-
-            db.timers.forEach(timeItems => {
-                setInterval(function(){
-                    document.getElementById('chat_input').value = botName + ': ' + timeItems['msg'];
-                    document.getElementsByClassName('chat-submit')[0].click();
-                },
-                timeItems['second']*1000);
             });
         }
 
@@ -46,7 +41,16 @@ var readyFlag = false;
 
 function deviceReady(){
 
-    
+    if(isLogin && enableFlag){
+        timerCommands.forEach(timeItems => {
+            setInterval(function(){
+                document.getElementById('chat_input').value = botName + ': ' + timeItems['msg'];
+                document.getElementsByClassName('chat-submit')[0].click();
+            },
+            timeItems['second']*1000);
+        });
+    }
+
         var chatWrapper = document.getElementsByClassName('live-chat-wrapper')[0];
         if(chatWrapper){
             clearInterval(myTimer);
@@ -54,8 +58,7 @@ function deviceReady(){
             var listEl = chatWrapper.getElementsByClassName('list')[0];
             listEl.addEventListener('DOMSubtreeModified',function(){
                 var chat = $('.live-chat-wrapper .item p')[0].innerHTML.toLowerCase();
-                
-                if(enableFlag && (chat == startSign+'uptime' || commandsStructure[chat])){
+                if(isLogin && enableFlag && (chat == startSign+'uptime' || commandsStructure[chat])){
                     
                     var now = new Date();
                     var timeFlag = ((now.getTime() - chatHistory[chat]) / 1000) > 5;
@@ -117,3 +120,5 @@ if(window.localStorage['persistentStore']){
        console.log(e);
    }
 }
+
+

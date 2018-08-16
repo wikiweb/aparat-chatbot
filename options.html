@@ -3,9 +3,34 @@
 <head>
     <link type="text/css" rel="stylesheet" href="bootstrap/bootstrap.min.css" />
     <title>Aparat ChatBot Options</title>
+    <meta charset="UTF8"/>
 </head>
 <body>
-    <div class="container">
+
+    <div id="loginForm" >
+        <div class="container">	
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <form id="loginForm" action="#">
+                        <br/><br/><br/><br/>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Aparat Username</label>
+                            <input type="text" class="form-control" id="loginUsername" placeholder="your Aparat account">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Password</label>
+                            <input type="password" class="form-control" name="password" id="loginPassword" placeholder="Password">
+                        </div>
+                        <div class="">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container" id="settingForm" style="display:none;">
         <div class="row">
             <div class="col-12">
                     <br/><br/>
@@ -14,18 +39,18 @@
                 </div>
                     
                 <div class="alert alert-warning" role="alert">
-                    Issue Report From <a href="https://t.me/wikiweb_ir" target="_blank">@Wikiweb_ir</a>
+                        🤖✅ Issue Report From <a href="https://t.me/wikiweb_ir" target="_blank">@Wikiweb_ir</a>
                 </div>
 
                 <div class="card" >
                     <div class="card-body">
-                        Default Commands: <br/><b>uptime</b> .
+                        Default Commands: <br/><b>uptime</b> 
                     </div>
                 </div><br/>
                 <form action="#">
 
                     <div class="form-group">
-                        <label for="streamerName">Do you want to active ?? </label>
+                        <label for="enableCheckBox">Do you want to active ?? </label>
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" value="" id="enableCheckBox">
                             <label class="form-check-label" for="enableCheckBox">
@@ -40,11 +65,6 @@
                         <input type="text" class="form-control" id="streamerName" placeholder="Jimmy">
                     </div>
             
-                    <div class="form-group">
-                        <label for="streamerAccount">Your Aparat Channel Name</label>
-                        <input type="text" class="form-control" id="streamerAccount" placeholder="wikiweb_ir">
-                    </div>
-
                     <div class="form-group">
                         <label for="startSign">Command Start With</label>
                         <input type="text" class="form-control" id="startSign" value="!">
@@ -101,6 +121,7 @@
                             <a id="saveForm" class="btn btn-success">Save</a>
                             <a id="exportForm" class="btn btn-default">Export Setting</a>
                             <a id="importForm" class="btn btn-default">Import Setting</a>
+                            <a id="logoutForm" class="btn btn-danger">Logout</a>
                         </div>
                     </div>
                 </form>
@@ -108,6 +129,8 @@
           </div>
     </div>
 
+    <script src="sha1.js"></script>
+    <script src="md5.js"></script>
     <script src="bootstrap/jquery.min.js"></script>
     <script src="options.js"></script>
     <script src="bootstrap/bootstrap.min.js"></script>

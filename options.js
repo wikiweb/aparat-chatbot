@@ -13,10 +13,18 @@ var db = {
 	]
 };
 
-var version = "V1.5";
+var version = "V1.6";
 var commandListCnt = 0;
 var timerListCnt = 0;
 var lastDb = '';
+
+//Form Handler
+chrome.storage.local.get(['isLogin'], function(result) {
+	if(result['isLogin']){
+		$('#loginForm').hide();
+		$('#settingForm').show();
+	}
+});
 
 // TODO: Storage Handler
 chrome.storage.local.get(['db'], function(result) {
@@ -33,54 +41,54 @@ chrome.storage.local.get(['db'], function(result) {
 
 function pageSetupHandler(db){
 	$('#streamerName').val(db.streamerName);
-		$('#streamerAccount').val(db.streamerAccount.toLowerCase());
-		$('#startSign').val(db.startSign);
-		$('#botName').val(db.botName);		
-		
-		var elmEnable = document.getElementById('enableCheckBox');
-		if(db.enable){
-			if (!elmEnable.checked) {
-				elmEnable.click();
-			}
-		}else{
-			if (elmEnable.checked) {
-				elmEnable.click();
-			}
+	//$('#streamerAccount').val(db.streamerAccount.toLowerCase());
+	$('#startSign').val(db.startSign);
+	$('#botName').val(db.botName);		
+	
+	var elmEnable = document.getElementById('enableCheckBox');
+	if(db.enable){
+		if (!elmEnable.checked) {
+			elmEnable.click();
 		}
-		
-
-		if(db['commands'] && db['commands'].length>0){
-			db.commands.forEach(item => {
-				
-				commandListCnt++;
-				var html = '<tr class="commandListItem" id="cmdListItem_'+commandListCnt+'"><td>';
-				html += '<input type="text" class="form-control form-cmd frmCmd" value="'+item.command+'" required>';
-				html += '</td><td>';
-				html +=	'<input type="text" class="form-control form-cmd frmMsg" value="'+item.msg+'" required>';
-				html += '</td><td><a id="cmdListItemDelete_'+commandListCnt+'" data-id="'+commandListCnt+'" class="btn btn-danger text-white">-</a></td></tr>';
-				
-				$('#commandsList').append(html);
-		
-				document.getElementById('cmdListItemDelete_'+commandListCnt).addEventListener('click',deleteCommand);
-			});
+	}else{
+		if (elmEnable.checked) {
+			elmEnable.click();
 		}
+	}
+	
+
+	if(db['commands'] && db['commands'].length>0){
+		db.commands.forEach(item => {
+			
+			commandListCnt++;
+			var html = '<tr class="commandListItem" id="cmdListItem_'+commandListCnt+'"><td>';
+			html += '<input type="text" class="form-control form-cmd frmCmd" value="'+item.command+'" required>';
+			html += '</td><td>';
+			html +=	'<input type="text" class="form-control form-cmd frmMsg" value="'+item.msg+'" required>';
+			html += '</td><td><a id="cmdListItemDelete_'+commandListCnt+'" data-id="'+commandListCnt+'" class="btn btn-danger text-white">-</a></td></tr>';
+			
+			$('#commandsList').append(html);
+	
+			document.getElementById('cmdListItemDelete_'+commandListCnt).addEventListener('click',deleteCommand);
+		});
+	}
 
 
-		if(db['timers'] && db['timers'].length>0){
-			db.timers.forEach(item => {
-				
-				timerListCnt++;
-				var html = '<tr class="timerListItem" id="tmrListItem_'+timerListCnt+'"><td>';
-				html += '<input type="text" class="form-control form-tmr frmSec" value="'+item.second+'" required>';
-				html += '</td><td>';
-				html +=	'<input type="text" class="form-control form-tmr frmMsg" value="'+item.msg+'" required>';
-				html += '</td><td><a id="tmrListItemDelete_'+timerListCnt+'" data-id="'+timerListCnt+'" class="btn btn-danger text-white">-</a></td></tr>';
-				
-				$('#timersList').append(html);
-		
-				document.getElementById('tmrListItemDelete_'+timerListCnt).addEventListener('click',deleteTimer);
-			});
-		}
+	if(db['timers'] && db['timers'].length>0){
+		db.timers.forEach(item => {
+			
+			timerListCnt++;
+			var html = '<tr class="timerListItem" id="tmrListItem_'+timerListCnt+'"><td>';
+			html += '<input type="text" class="form-control form-tmr frmSec" value="'+item.second+'" required>';
+			html += '</td><td>';
+			html +=	'<input type="text" class="form-control form-tmr frmMsg" value="'+item.msg+'" required>';
+			html += '</td><td><a id="tmrListItemDelete_'+timerListCnt+'" data-id="'+timerListCnt+'" class="btn btn-danger text-white">-</a></td></tr>';
+			
+			$('#timersList').append(html);
+	
+			document.getElementById('tmrListItemDelete_'+timerListCnt).addEventListener('click',deleteTimer);
+		});
+	}
 }
 
 // Command Form Generator
@@ -163,7 +171,7 @@ function processFile(e){
         results;
     if (file && file.length) {        
 		var newDb = JSON.parse(file);
-		if(newDb['streamerAccount']){
+		if(newDb['streamerName']){
 			chrome.storage.local.set({'db': file}, function() {
 				alert('Success');
 				pageSetupHandler(newDb);
@@ -221,7 +229,7 @@ function saveForm(){
 	db.enable = (elmEnable.checked)? true:false;
 
 	db.streamerName = $('#streamerName').val();
-	db.streamerAccount = $('#streamerAccount').val().toLowerCase();
+	//db.streamerAccount = $('#streamerAccount').val().toLowerCase();
 	db.startSign = $('#startSign').val();
 	db.botName = $('#botName').val();
 
@@ -247,29 +255,98 @@ window.addEventListener("beforeunload", function (e) {
 	return confirmationMessage; //Gecko + Webkit, Safari, Chrome etc.
 });
 
-window.callAjax = function(url, callback){
-    var xmlhttp;
-    // compatible with IE7+, Firefox, Chrome, Opera, Safari
-    xmlhttp = new XMLHttpRequest();
-    xmlhttp.onreadystatechange = function(){
-        if (xmlhttp.readyState == 4 && xmlhttp.status == 200){
-            callback(xmlhttp.responseText);
-        }
-    }
-    xmlhttp.open("GET", url, true);
-    xmlhttp.send();
+window.callAjax = function(url, options){
+
+	if (url != null && url != '') {
+
+		var requestType = (options.type) ? options.type : "get";
+		var requestTimeOut = (options.timeout) ? options.timeout : 20000;
+		var onError = (options.onError) ? options.onError : "defaultErrorHandle";
+		var onSuccess = (options.onSuccess) ? options.onSuccess : null;
+		var data = (options.data) ? options.data : null;
+
+		$.ajax({
+			url: url,
+			dataType: 'JSON',
+			type: requestType,
+			data: data,
+			timeout: requestTimeOut,
+			success: function(apiData) {
+				onSuccess(apiData,options);
+			},
+			error: function(error) {
+				eval(onError + "(url,options);");
+			}
+		});
+	} 
+
+    // var xmlhttp;
+    // // compatible with IE7+, Firefox, Chrome, Opera, Safari
+    // xmlhttp = new XMLHttpRequest();
+    // xmlhttp.onreadystatechange = function(){
+    //     if (xmlhttp.readyState == 4 && xmlhttp.status == 200){
+    //         callback(xmlhttp.responseText);
+    //     }
+    // }
+    // xmlhttp.open("GET", url, true);
+    // xmlhttp.send();
 }
 
+//Node+React(redux)+mongo = boom
 
-callAjax('https://api.github.com/repos/wikiweb/aparat-chatbot/releases/latest',function(result){
-	try{
-		var result = JSON.parse(result);
-		console.log(result['name'],version);
-		if(result['name'] != version){
-			$('#updateBox').show();
+// Version Controller
+var getLastVersionOptions = {
+	'onSuccess': function(result,options){
+		try{
+			if(result['name'] != version){
+				$('#updateBox').show();
+			}
+		}catch(e){
+			console.log(e);
 		}
-	}catch(e){
-		console.log(e);
+	},
+	'onError': function(){
+		console.log('error on get update version');
 	}
+};
+callAjax('https://api.github.com/repos/wikiweb/aparat-chatbot/releases/latest',getLastVersionOptions);
+
+// LOGIN
+document.getElementById('loginForm').addEventListener('submit',function(evt){
+	evt.preventDefault();
 	
-})
+	var username = $('#loginUsername').val();
+	var password = $('#loginPassword').val();
+	var logOptions = {		
+		onSuccess: function(result,options){
+			result = result['login'];
+			if(result['type']=='success'){
+				
+				chrome.storage.local.set({'isLogin': result['username']}, function() {
+					console.log('db set');
+				});
+
+				$('#loginForm').hide();
+				$('#settingForm').show();
+			}else{
+				alert('Login Error');
+			}
+		},
+		onError: function(){
+			console.log('Error on login');
+		}
+	};
+	callAjax('https://www.aparat.com/etc/api/login/luser/'+username+'/lpass/'+sha1(md5(password)),logOptions);
+	
+	return false;
+});
+
+
+//LOGOUT
+document.getElementById('logoutForm').addEventListener('click',function(){
+	chrome.storage.local.set({'isLogin': ''}, function() {
+		console.log('db set');
+		$('#loginForm').show();
+		$('#settingForm').hide();
+	});
+});
