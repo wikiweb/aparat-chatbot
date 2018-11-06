@@ -1,138 +1,293 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:og="https://ogp.me/ns#">
 
 <head>
-    <link type="text/css" rel="stylesheet" href="bootstrap/bootstrap.min.css" />
+    <link type="text/css" rel="stylesheet" href="assets/bootstrap/bootstrap.min.css"/>
     <title>Aparat ChatBot Options</title>
     <meta charset="UTF8"/>
+    <style>
+        .loader {
+            border: 6px solid #f3f3f3; /* Light grey */
+            border-top: 6px solid #3498db; /* Blue */
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 2s linear infinite;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin: -30px 0 0 -30px;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loaderWrapper {
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            left: 0px;
+            top: 0px;
+            background-color: rgba(0, 0, 0, 0.4);
+            text-align: center;
+            z-index: 99999999999999;
+            display: none;
+        }
+
+        .page{
+            display: none;
+        }
+    </style>
 </head>
 <body>
 
-    <div id="loginForm" >
-        <div class="container">	
-            <div class="row">
-                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    <form id="loginForm" action="#">
-                        <br/><br/><br/><br/>
-                        <div class="form-group">
-                            <label for="exampleInputEmail1">Aparat Username</label>
-                            <input type="text" class="form-control" id="loginUsername" placeholder="your Aparat account">
-                        </div>
-                        <div class="form-group">
-                            <label for="exampleInputPassword1">Password</label>
-                            <input type="password" class="form-control" name="password" id="loginPassword" placeholder="Password">
-                        </div>
-                        <div class="">
-                            <button type="submit" class="btn btn-primary">Submit</button>
-                        </div>
-                    </form>
-                </div>
+
+<!--Loader Section-->
+<div class="loaderWrapper" id="pageLoading">
+    <div class="loader"></div>
+</div>
+
+<!--Menu Section-->
+<div id="menuPage" class="page" style="display: none;">
+    <div class="container">
+        <br/><br/>
+        <div id="updateBox" style="display: none" class="alert alert-danger" role="alert">
+            New Version Is Available, Download Latest Version From <a
+                href="https://github.com/wikiweb/aparat-chatbot/releases" target="_blank">This Link </a>And Replace
+            Files and reload your Extension
+        </div>
+
+        <div class="alert alert-warning" role="alert">
+            🤖✅ Issue Report From <a href="https://t.me/wikiweb_ir" target="_blank">@Wikiweb_ir</a>
+        </div>
+
+        <div class="btn-group-vertical">
+            <a type="button" data-target_page="settingForm" class="pageLink btn btn-primary">Settings</a>
+            <a type="button" data-target_page="adminForm" class="pageLink btn btn-primary">Operators</a>
+            <a type="button" class="logoutForm btn btn-primary">Logout</a>
+        </div>
+    </div>
+</div>
+
+<!--Admin Section-->
+<div class="container page" id="adminForm">
+
+    <div class="row">
+        <div class="col-12">
+            <br/>
+            <br/>
+            <a class="btn pageLink" data-target_page="menuPage">Back</a>
+            <br/>
+            <br/>
+        </div>
+    </div>
+    <div class="card">
+        <h4>You Operator in this pages:</h4>
+        <div id="adminHereList">
+
+        </div>
+    </div>
+
+<br/>
+<br/>
+    <div class="card">
+        <h4>Manage Operator for you stream:</h4>
+    </div>
+
+    <div class="card">
+        <div class="row">
+            <div class="col col-6">
+                <form id="addAdminForm" action="#" class="form-inline">
+                    <input type="text" class="form-control mb-2 mr-sm-2" id="adminUserName" placeholder="Aparat username">
+                    <button type="submit" class="btn btn-primary mb-2">Add</button>
+                </form>
+            </div>
+            <div class="col col-6">
+                <ul class="list-group" id="adminsList">
+
+                </ul>
             </div>
         </div>
     </div>
 
-    <div class="container" id="settingForm" style="display:none;">
+    <br/><br/>
+
+    <div class="card">
         <div class="row">
-            <div class="col-12">
-                    <br/><br/>
-                <div id="updateBox" style="display: none" class="alert alert-danger" role="alert">
-                        New Version Is Available, Download Latest Version From <a href="https://github.com/wikiweb/aparat-chatbot/releases" target="_blank">This Link </a>And Replace Files and reload your Extension
-                </div>
-                    
-                <div class="alert alert-warning" role="alert">
-                        🤖✅ Issue Report From <a href="https://t.me/wikiweb_ir" target="_blank">@Wikiweb_ir</a>
-                </div>
+            <div class="col">Logs:<br/>
+                <a class="reloadAdminLogData btn btn-dark text-white"> Load Log Data </a><br/>
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>Operator UserName</th>
+                        <th>Banned Username</th>
+                        <th>Date</th>
+                    </tr>
+                    </thead>
+                    <tbody id="bannedLog">
 
-                <div class="card" >
-                    <div class="card-body">
-                        Default Commands: <br/><b>uptime</b> 
-                    </div>
-                </div><br/>
-                <form action="#">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 
+
+</div>
+
+<!--Login Section-->
+<div id="loginPage" class="page">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <form id="loginForm" action="#">
+                    <br/><br/><br/><br/>
                     <div class="form-group">
-                        <label for="enableCheckBox">Do you want to active ?? </label>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="enableCheckBox">
-                            <label class="form-check-label" for="enableCheckBox">
-                                <b>Enable CHATBOT</b>
-                            </label>
-                        </div>
+                        <label for="loginUsername">Aparat Username</label>
+                        <input type="text" class="form-control" id="loginUsername" placeholder="your Aparat account">
                     </div>
-
-                        
                     <div class="form-group">
-                        <label for="streamerName">Your Name</label>
-                        <input type="text" class="form-control" id="streamerName" placeholder="Jimmy">
+                        <label for="loginPassword">Password</label>
+                        <input type="password" class="form-control" name="password" id="loginPassword"
+                               placeholder="Password">
                     </div>
-            
-                    <div class="form-group">
-                        <label for="startSign">Command Start With</label>
-                        <input type="text" class="form-control" id="startSign" value="!">
-                    </div>
-                    
-
-                    <div class="form-group">
-                        <label for="botName">Bot Name</label>
-                        <input type="text" class="form-control" id="botName" value="">
-                    </div>
-
-                    
-                    
-                    <br/><br/>
-                    <h4>Commands:</h4>
-
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th scope="col">Command (no sign)</th>
-                                <th scope="col">Message</th>
-                                <th scope="col">-</th>
-                            </tr>
-                        </thead>
-                        <tbody id="commandsList">
-                                                     
-                        </tbody>
-                        
-                    </table>
-                    <div><a class="btn btn-primary text-white" id="addCommandEl">+Add Command</a></div>
-
-
-                    <br/><br/>
-                    <h4>Timer Messages:</h4>
-
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th scope="col">Second</th>
-                                <th scope="col">Message</th>
-                                <th scope="col">-</th>
-                            </tr>
-                        </thead>
-                        <tbody id="timersList">
-                                                  
-                        </tbody>
-                    </table>
-                    <div><a class="btn btn-primary text-white" id="addTimerEl">+Add Timer</a></div>
-                
-
-                    <hr/>
-                    <div class="form-group row">
-                        <div class="col-sm-10">
-                            <a id="saveForm" class="btn btn-success">Save</a>
-                            <a id="exportForm" class="btn btn-default">Export Setting</a>
-                            <a id="importForm" class="btn btn-default">Import Setting</a>
-                            <a id="logoutForm" class="btn btn-danger">Logout</a>
-                        </div>
+                    <div class="">
+                        <button type="submit" class="btn btn-primary">Submit</button>
                     </div>
                 </form>
             </div>
-          </div>
+        </div>
     </div>
+</div>
 
-    <script src="sha1.js"></script>
-    <script src="md5.js"></script>
-    <script src="bootstrap/jquery.min.js"></script>
-    <script src="options.js"></script>
-    <script src="bootstrap/bootstrap.min.js"></script>
+<!--ChatBot Section-->
+<div class="container page" id="settingForm" style="display:none;">
+    <div class="row">
+        <div class="col-12">
+
+            <br/>
+            <br/>
+            <a class="btn pageLink" data-target_page="menuPage">Back</a>
+            <br/>
+            <br/>
+
+
+            <div class="card">
+                <div class="card-body">
+                    Default Commands: <br/><b>uptime</b>
+                </div>
+            </div>
+            <br/>
+            <form action="#">
+
+                <div class="form-group">
+                    <label for="enableCheckBox">Do you want to active ?? </label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="enableCheckBox">
+                        <label class="form-check-label" for="enableCheckBox">
+                            <b>Enable CHATBOT</b>
+                        </label>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="streamerName">Your Name</label>
+                    <input type="text" class="form-control" id="streamerName" placeholder="Jimmy">
+                </div>
+
+                <div class="form-group">
+                    <label for="startSign">Command Start With</label>
+                    <input type="text" class="form-control" id="startSign" value="!">
+                </div>
+
+
+                <div class="form-group">
+                    <label for="botName">Bot Name</label>
+                    <input type="text" class="form-control" id="botName" value="">
+                </div>
+
+
+                <br/><br/>
+                <h4>Commands:</h4>
+
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th scope="col">Command (no sign)</th>
+                        <th scope="col">Message</th>
+                        <th scope="col">-</th>
+                    </tr>
+                    </thead>
+                    <tbody id="commandsList">
+
+                    </tbody>
+
+                </table>
+                <div><a class="btn btn-primary text-white" id="addCommandEl">+Add Command</a></div>
+
+
+                <br/><br/>
+                <h4>Timer Messages:</h4>
+
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th scope="col">Second</th>
+                        <th scope="col">Message</th>
+                        <th scope="col">-</th>
+                    </tr>
+                    </thead>
+                    <tbody id="timersList">
+
+                    </tbody>
+                </table>
+                <div><a class="btn btn-primary text-white" id="addTimerEl">+Add Timer</a></div>
+
+
+                <hr/>
+                <div class="card" style="display: none">
+                    <div class="card-body">
+                        <a id="spotifyAuth" class="btn btn-primary text-white">
+                            Login With Spotify
+                        </a>
+                        <a id="spotifyCheck" class="btn btn-success text-white" style="display: none">
+                            Check Auth Result
+                        </a>
+                    </div>
+                </div>
+
+                <hr/>
+                <div class="form-group row">
+                    <div class="col-sm-10">
+                        <a id="saveForm" class="btn btn-success">Save</a>
+                        <a id="exportForm" class="btn btn-default">Export Setting</a>
+                        <a id="importForm" class="btn btn-default">Import Setting</a>
+                        <a id="logoutForm" class="logoutForm btn btn-danger">Logout</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!--Libs-->
+<script src="assets/js/sha1.js"></script>
+<script src="assets/js/md5.js"></script>
+<script src="assets/js/jquery.min.js"></script>
+
+<!--Page Handler-->
+<script src="assets/js/pages/options.js"></script>
+<script src="assets/js/pages/chatbot.js"></script>
+<script src="assets/js/pages/login.js"></script>
+<script src="assets/js/pages/admin.js"></script>
+
+
+<script src="assets/bootstrap/bootstrap.min.js"></script>
 </body>
 </html>

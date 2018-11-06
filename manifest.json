@@ -7,32 +7,33 @@
   "content_scripts": [
     {
       "matches": [
-        "*://www.aparat.com/*/live"
+        "*://www.aparat.com/*/live*"
       ],
-      "js": ["jquery.min.js","content.js"]
+      "js": ["assets/js/jquery.min.js","assets/js/content.js"]
     }
   ],
   "options_ui": {
     "page": "options.html",
     "open_in_tab": true
   },
+
   "permissions": [
     "storage",
     "tabs",
-    "https://api.aparat.com",
-    "http://api.aparat.com",
     "*://*.aparat.com/*",
     "*://*.github.com/*",
-    "*"
+    "*://*.spotify.com/*",
+    "*://*.meetso.ir/*",
+    "*://meetso.ir/chatbot/*"
   ],
   "browser_action": { 
-    "default_icon": "icon128.png",
+    "default_icon": "assets/icons/icon128.png",
     "default_popup": "popup.html"
   },   
   "icons": { 
-    "16": "icon16.png",
-    "48": "icon48.png",
-    "96": "icon96.png",
-    "128": "icon128.png" 
+    "16": "assets/icons/icon16.png",
+    "48": "assets/icons/icon48.png",
+    "96": "assets/icons/icon96.png",
+    "128": "assets/icons/icon128.png" 
   }
 }

@@ -38,8 +38,43 @@ chrome.storage.local.get(['db'], function(result) {
 
 var myTimer = setInterval(deviceReady, 1000);
 var readyFlag = false;
-
+var luser,ltoken,token,amIAdmin=false;
 function deviceReady(){
+
+
+
+    chrome.storage.local.get(['loginDb'], function (result) {
+        if(result['loginDb']){
+            var tablink = window.location.href;
+            var urlUserName = tablink.split('/');
+
+            luser = result['loginDb']['luser'];
+            token = result['loginDb']['token'];
+
+            var script = document.createElement("script");
+            script.innerHTML = "var chatBotLUser='"+luser+"'; var chatBotToken='"+token+"'; var chatBotAmIAdmin=false;";
+            document.head.appendChild(script);
+
+
+            callAjax('https://meetso.ir/chatbot/?amIAdmin&luser='+result['loginDb']['luser']+'&token='+result['loginDb']['token']+'&username='+urlUserName[3], function (responseText) {
+                if(responseText=='success'){
+                    amIAdmin = true;
+                    var script = document.createElement("script");
+                    script.innerHTML = "var chatBotAmIAdmin=true;";
+                    document.head.appendChild(script);
+                }
+            });
+        }
+    });
+
+
+
+
+
+
+
+
+
 
     if(isLogin && enableFlag){
         timerCommands.forEach(timeItems => {
@@ -108,7 +143,8 @@ window.callAjax = function(url, callback){
     }
     xmlhttp.open("GET", url, true);
     xmlhttp.send();
-}
+};
+
 
 if(window.localStorage['persistentStore']){
    try{
@@ -120,5 +156,42 @@ if(window.localStorage['persistentStore']){
        console.log(e);
    }
 }
+
+var script = document.createElement("script");
+script.innerHTML = "window.chatBotBanUser = function() {\n" +
+    "    if(chatBotAmIAdmin){ \n" +
+    "    var username= prompt('enterUsername',''); \n" +
+    "    var x = confirm('Are u sure to ban '+username+'?');\n" +
+    "    if(x){\n" +
+    "        var tablink = window.location.href;\n" +
+    "        var urlUserName = tablink.split('/');\n" +
+    "        chatBotCallAjax('https://meetso.ir/chatbot/?banUser&channel='+urlUserName[3]+'&username='+username+'&luser='+chatBotLUser+'&token='+chatBotToken,function (responseText) {\n" +
+    "            if(responseText=='success'){\n" +
+    "                alert('User Banned');\n" +
+    "            }else{\n" +
+    "                alert(\"Error\");\n" +
+    "            }\n" +
+    "        });\n" +
+    "    } }else{  alert('this is for moderator !!!'); }\n" +
+    "};" +
+    "window.chatBotCallAjax = function(url, callback){\n" +
+    "    var xmlhttp;\n" +
+    "    xmlhttp = new XMLHttpRequest();\n" +
+    "    xmlhttp.onreadystatechange = function(){\n" +
+    "        if (xmlhttp.readyState == 4 && xmlhttp.status == 200){\n" +
+    "            callback(xmlhttp.responseText);\n" +
+    "        }\n" +
+    "    }\n" +
+    "    xmlhttp.open('GET', url, true);\n" +
+    "    xmlhttp.send();\n" +
+    "};";
+document.head.appendChild(script);
+
+
+var banLink = document.createElement("a");
+banLink.innerHTML = 'Ban User';
+banLink.setAttribute('style','color:#fff;width:100px; height:40px;position:fixed;font-size:15px;top:30px;left:0px;z-index:99999999999;');
+banLink.setAttribute('onclick','chatBotBanUser()');
+document.body.appendChild(banLink);
 
 
