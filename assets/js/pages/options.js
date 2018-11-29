@@ -13,7 +13,7 @@ var db = {
 	]
 };
 
-var version = "V1.6";
+var version = "V1.7";
 var commandListCnt = 0;
 var timerListCnt = 0;
 var lastDb = '';
