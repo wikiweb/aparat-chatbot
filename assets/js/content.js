@@ -79,20 +79,22 @@ function deviceReady(){
     if(isLogin && enableFlag){
         timerCommands.forEach(timeItems => {
             setInterval(function(){
-                document.getElementById('chat_input').value = botName + ': ' + timeItems['msg'];
-                document.getElementsByClassName('chat-submit')[0].click();
+                document.getElementsByClassName("emojionearea-editor")[0].innerHTML = botName + ': ' + timeItems['msg'];
+                var event = document.createEvent("SVGEvents");
+                event.initEvent("click",true,true);
+                document.getElementsByClassName('send-button')[0].dispatchEvent(event);
             },
             timeItems['second']*1000);
         });
     }
 
-        var chatWrapper = document.getElementsByClassName('live-chat-wrapper')[0];
+        var chatWrapper = document.getElementsByClassName('chat')[0];
         if(chatWrapper){
             clearInterval(myTimer);
-
-            var listEl = chatWrapper.getElementsByClassName('list')[0];
+            var listEl = chatWrapper.getElementsByClassName('chat__content')[0];
             listEl.addEventListener('DOMSubtreeModified',function(){
-                var chat = $('.live-chat-wrapper .item p')[0].innerHTML.toLowerCase();
+                var chat = $('.chat__content .message .message__text').last()[0].innerHTML.toLowerCase();
+                console.log(chat)
                 if(isLogin && enableFlag && (chat == startSign+'uptime' || commandsStructure[chat])){
                     
                     var now = new Date();
@@ -116,12 +118,19 @@ function deviceReady(){
                                 var diffDays = Math.floor(diffMs / 86400000); // days
                                 var diffHrs = Math.floor((diffMs % 86400000) / 3600000); // hours
                                 var diffMins = Math.round(((diffMs % 86400000) % 3600000) / 60000); // minutes
-                                document.getElementById('chat_input').value = botName + ': ' + diffHrs + " ساعت و " + diffMins + " دقیقه";
-                                document.getElementsByClassName('chat-submit')[0].click();
+                                document.getElementsByClassName("emojionearea-editor")[0].innerHTML = botName + ': ' + diffHrs + " ساعت و " + diffMins + " دقیقه";
+                                
+                                var event = document.createEvent("SVGEvents");
+                                event.initEvent("click",true,true);
+                                document.getElementsByClassName('send-button')[0].dispatchEvent(event);
                             });
                         }else{
-                            document.getElementById('chat_input').value = botName + ': ' +commandsStructure[chat];
-                            document.getElementsByClassName('chat-submit')[0].click();
+                            console.log(1111);
+                            document.getElementsByClassName("emojionearea-editor")[0].innerHTML = botName + ': ' +commandsStructure[chat];
+                            
+                            var event = document.createEvent("SVGEvents");
+                            event.initEvent("click",true,true);
+                            document.getElementsByClassName('send-button')[0].dispatchEvent(event);
                         }
                         
                     }
