@@ -13,9 +13,11 @@ chrome.storage.local.get(['isLogin'], function(result) {
     var urlUserName = tablink.split('/');
     
     console.log('chatBot',urlUserName[3],result['isLogin']);
-    if(urlUserName[3] != result['isLogin']){
-        isLogin= false;
-    }
+    if(urlUserName[3] != 'user'){
+        if(urlUserName[3].toLowerCase() != result['isLogin'].toLowerCase()){
+            isLogin= false;
+        }
+    }    
 });
 
 chrome.storage.local.get(['db'], function(result) {
