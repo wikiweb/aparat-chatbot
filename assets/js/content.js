@@ -81,7 +81,7 @@ function deviceReady(){
     if(isLogin && enableFlag){
         timerCommands.forEach(timeItems => {
             setInterval(function(){
-                document.getElementsByClassName("emojionearea-editor")[0].innerHTML = botName + ': ' + timeItems['msg'];
+                document.getElementsByClassName("chat-input")[0].value = botName + ': ' + timeItems['msg'];
                 var event = document.createEvent("SVGEvents");
                 event.initEvent("click",true,true);
                 document.getElementsByClassName('send-button')[0].dispatchEvent(event);
@@ -120,7 +120,7 @@ function deviceReady(){
                                 var diffDays = Math.floor(diffMs / 86400000); // days
                                 var diffHrs = Math.floor((diffMs % 86400000) / 3600000); // hours
                                 var diffMins = Math.round(((diffMs % 86400000) % 3600000) / 60000); // minutes
-                                document.getElementsByClassName("emojionearea-editor")[0].innerHTML = botName + ': ' + diffHrs + " ساعت و " + diffMins + " دقیقه";
+                                document.getElementsByClassName("chat-input")[0].value = botName + ': ' + diffHrs + " ساعت و " + diffMins + " دقیقه";
                                 
                                 var event = document.createEvent("SVGEvents");
                                 event.initEvent("click",true,true);
@@ -128,7 +128,7 @@ function deviceReady(){
                             });
                         }else{
                             console.log(1111);
-                            document.getElementsByClassName("emojionearea-editor")[0].innerHTML = botName + ': ' +commandsStructure[chat];
+                            document.getElementsByClassName("chat-input")[0].value = botName + ': ' +commandsStructure[chat];
                             
                             var event = document.createEvent("SVGEvents");
                             event.initEvent("click",true,true);
